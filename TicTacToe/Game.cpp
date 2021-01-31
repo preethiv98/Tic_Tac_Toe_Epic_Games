@@ -3,12 +3,14 @@
 #include <list>
 #include <vector>
 
+
+//This method controls player turns and adds the "X" or "O" to each of the numbered tiles.
 void Game::PlayerInput()
 {
 	int size = 0;
 	for (int i = 0; i < board.size(); i++)
 		size += board[i].size();
-	if (playerOneTurn)
+	if (playerOneTurn) //if it is palyer one's turn
 	{
 		std::cout << std::endl;
 		std::cout << "Player 1's Turn! " << std::endl;
@@ -16,7 +18,7 @@ void Game::PlayerInput()
 		std::cout << "Type in a number or -1 to undo: ";
 		std::cin >> num;
 	}
-	else
+	else //if it is player two's turn
 	{
 		std::cout << std::endl;
 		std::cout << "Player 2's Turn! " << std::endl;
@@ -25,20 +27,19 @@ void Game::PlayerInput()
 		std::cin >> num;
 	}
 	
-	if (num == -1)
+	if (num == -1) //if the player pressed -1 to undo
 	{
 		Undo();
 		putDown = true;
 	}
 	if (moveCount == 1)
 	{
-		//Reset();
+		//if this is the first time playing the game, push the board to board moves.
 		boardMoves.push_back(board);
-		//putDown = false;
-		//moveCount++;
+		
 		
 	}
-	if (std::cin.fail() || num > size || num == 0 || num < -1)
+	if (std::cin.fail() || num > size || num == 0 || num < -1) //if the user inputed an invalid option
 	{
 
 	std::cout << std::endl;
@@ -46,7 +47,6 @@ void Game::PlayerInput()
 		std::cin.clear();
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		InitBoard(boardMoves.back());
-		//PlayerInput();
 		std::cout << std::endl;
 	}
 	else
@@ -59,28 +59,27 @@ void Game::PlayerInput()
 				{
 					if (playerOneTurn)
 					{
-						//lastNumPlayerOne = board[i][j];
+						//Places the player One "X" in the spot they chose
 						std::vector<std::vector<char>> newBoard = boardMoves.back();
 						newBoard[i][j] = 'X';
 						boardMoves.push_back(newBoard);
 						playerOneTurn = false;
 						
 						putDown = true;
-						//std::cout << "This is p1 turn and put down is" << " " << putDown << std::endl;
 						InitBoard(boardMoves.back());
 						moveCount++;
 						break;
 					}
 					else
 					{
-						//lastNumPlayerTwo = board[i][j];
+						//Places the player Two "O" in the spot they chose
 						std::vector<std::vector<char>> newBoard = boardMoves.back();
 						newBoard[i][j] = 'O';
 						boardMoves.push_back(newBoard);
 						playerOneTurn = true;
 					
 						putDown = true;
-						//std::cout << "This is p2 turn and put down is" << " " << putDown << std::endl;
+						
 						InitBoard(boardMoves.back());
 						moveCount++;
 						break;
@@ -89,7 +88,7 @@ void Game::PlayerInput()
 
 			}
 		}
-		//std::cout << putDown << std::endl;
+		//checks to see if the player is trying to put something that is already in a spot
 		if (!putDown)
 		{
 		std::cout << std::endl;
@@ -108,6 +107,7 @@ void Game::PlayerInput()
 	
 }
 
+//Initialize the board
 void Game::InitBoard(std::vector<std::vector<char>> arr)
 {
 	std::cout << "  PLAYER 1 - [X]   PLAYER 2 - [O]        \n" << std::endl;
@@ -125,6 +125,9 @@ void Game::InitBoard(std::vector<std::vector<char>> arr)
 	}
 }
 
+
+/*This was an older method that is no longer used for drawing boards that look like a Tic Tac Toe board. For the mnk version I decided
+* not to use this method, but it is here for reference.*/
 void Game::DrawBoard(std::vector<std::vector<char>> arr)
 {
 	int count = 0;
@@ -140,12 +143,6 @@ void Game::DrawBoard(std::vector<std::vector<char>> arr)
 	{
 		for (int j = 0; j < arr.size(); j++)
 		{
-
-		/*	if (arr[i][j] % square == 0 && square <= arr[i][j])
-			{
-				std::cout << "   |   " << std::endl;
-				std::cout << "----------------------------------" * 3 << std::endl;
-			}*/
 			
 			if (i == 0 && j == 0)
 			{
@@ -171,21 +168,10 @@ void Game::DrawBoard(std::vector<std::vector<char>> arr)
 		}
 	}
 
-
-	////std::cout << "PLAYER - 1 [X] PLAYER - 2 [O]" << std::endl;
-	//std::cout << std::endl;
-	//std::cout << std::endl;
-	//std::cout << "     |     |     \n";
-	//std::cout << "tt  " << board[0][0] << "  | " << board[0][1] << "  |  " << board[0][2] << "\n";
-	//std::cout << "tt_____|_____|_____n";
-	//std::cout << "tt     |     |     n";
-	//std::cout << "tt  " << board[1][0] << "  | " << board[1][1] << "  |  " << board[1][2] << "\n";
-	//std::cout << "tt_____|_____|_____n";
-	//std::cout << "tt     |     |     n";
-	//std::cout << "tt  " << board[2][0] << "  | " << board[2][1] << "  |  " << board[2][2] << "\n";
-	//std::cout << "tt     |     |     n";
 }
 
+
+//Resets the game
 void Game::Reset()
 {
 	int count = 1;
@@ -202,22 +188,21 @@ void Game::Reset()
 			
 		}
 	}
-	//putDown = false;
+
 	moveCount = 1;
 	boardMoves.clear();
 }
-
+//Undoes the method
 void Game::Undo()
 {
 	if (moveCount == 1)
 	{
+	//Checks if the game is already at the beginning
 		std::cout << "Invalid undo!" << std::endl;
 		std::cin.clear();
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		Reset();
 		InitBoard(board);
-		//putDown = false;
-		//PlayerInput();
 		
 		
 	}
@@ -243,6 +228,7 @@ void Game::Undo()
 	}
 }
 
+//Test cases to see if the tic tac toe board has reached a game over state.
 bool Game::GameOver()
 {
 	if (!boardMoves.empty())
@@ -294,6 +280,7 @@ bool Game::GameOver()
 	return false;
 }
 
+//Checks if the row has the same character "X" or "O"
 bool Game::RowSame(std::vector<std::vector<char>> arr, char x)
 { 
 	int count;
@@ -345,7 +332,7 @@ bool Game::RowSame(std::vector<std::vector<char>> arr, char x)
 	}
 
 }
-
+//Checks if the column has the same character "X" or "O"
 bool Game::ColumnSame(std::vector<std::vector<char>> arr, char x)
 {
 	int count;
@@ -398,7 +385,7 @@ bool Game::ColumnSame(std::vector<std::vector<char>> arr, char x)
 		
 
 }
-
+//Checks if the diagonals has the same character "X" or "O"
 bool Game::DiagonalsSame(std::vector<std::vector<char>> arr, char x)
 {
 	int val = 0;

@@ -8,23 +8,21 @@
 
 int main()
 {
+	//Create new Game
 	Game* game = new Game();
-	/*char boardGame[3][3] = { {'X','X','3'},{'4','X','6'},{'X','X','9'} };
-	char x = 'X';
-	bool check = game->ColumnSame(boardGame, x);
-	std::cout << check;*/
 	std::vector<std::vector<char>> board{
 {'1','2','3'},{'4','5','6'},{'7','8','9'}
 	};
-	//game->InitBoard(board);
+	//Initialize Board
 	game->board = board;
-    //Game* game = new Game();
+    //Start Game
 	game->InitBoard(game->board);
 	while (!game->GameOver())
 	{
 		game->PlayerInput();
 	}
-
+	//Resets the board
+	game->Reset();
 };
    
 
